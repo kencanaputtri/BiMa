@@ -24,6 +24,13 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        .header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
         .logo {
             color: var(--bima-green);
             font-size: 24px;
@@ -31,53 +38,37 @@
             text-decoration: none;
         }
 
-        .search-box {
-            position: relative;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 40px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f5f5f5;
-        }
-
-        .location-icon {
-            position: absolute;
-            left: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-        }
-
-        .breadcrumb {
-            background: transparent;
-            padding: 20px 0 10px;
-        }
-
-        .breadcrumb-item a {
-            color: #00a5cf;
+        .logo:hover {
+            color: var(--bima-green);
             text-decoration: none;
+        }
+
+        .search-container {
+            width: 100%;
         }
 
         .page-title {
             font-size: 28px;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin: 30px 0;
+            padding: 0 15px;
+        }
+
+        .restaurant-grid {
+            padding: 15px 10px;
         }
 
         .restaurant-card {
             background: white;
             border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             transition: transform 0.2s;
             text-decoration: none;
             color: inherit;
             display: block;
+            height: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .restaurant-card:hover {
@@ -121,39 +112,103 @@
             margin-right: 15px;
         }
 
-        .promo-badge {
+        .promo-badge, .featured-badge {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: #00a5cf;
-            color: white;
             padding: 4px 12px;
             border-radius: 4px;
             font-size: 12px;
+            z-index: 1;
+        }
+
+        .promo-badge {
+            background: #00a5cf;
+            color: white;
         }
 
         .featured-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
             background: #28a745;
             color: white;
-            padding: 4px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+        }
+
+        @media (max-width: 767px) {
+            .restaurant-grid {
+                padding: 10px 5px;
+            }
+
+            .restaurant-grid .row {
+                margin-left: -8px;
+                margin-right: -8px;
+            }
+
+            .restaurant-grid .col-6 {
+                padding-left: 8px;
+                padding-right: 8px;
+                margin-bottom: 16px;
+            }
+
+            .restaurant-image {
+                height: 140px;
+            }
+
+            .restaurant-info {
+                padding: 10px;
+            }
+
+            .restaurant-name {
+                font-size: 14px;
+                margin-bottom: 4px;
+            }
+
+            .page-title {
+                font-size: 22px;
+                margin: 20px 0;
+            }
+
+            .restaurant-tags {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 575px) {
+            .restaurant-grid .row {
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+
+            .restaurant-grid .col-6 {
+                padding-left: 5px;
+                padding-right: 5px;
+                margin-bottom: 10px;
+            }
+
+            .restaurant-image {
+                height: 120px;
+            }
+
+            .restaurant-info {
+                padding: 8px;
+            }
         }
     </style>
 </head>
 <body>
     <header class="top-header">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-2">
-                    <a href="#" class="logo">BiMa</a>
+            <div class="header-wrapper">
+                <a href="#" class="logo">BiMa</a>
+                <div class="auth-controls">
+                    <img src="images/user.png" alt="Google" style="width: 30px; margin-right: 8px;">
+                    <select class="btn btn-outline-secondary">
+                        <option>ID</option>
+                        <option>EN</option>
+                    </select>
                 </div>
-                <div class="col-md-7">
+            </div>
+            <div class="search-container">
                 <div class="input-group">
-                    <select class="custom-select" id="inputGroupSelect04">
+                    <select class="custom-select">
                         <option selected>Makanan</option>
                         <option value="1">Dekorasi</option>
                         <option value="2">Aksesoris</option>
@@ -162,63 +217,57 @@
                     <div class="input-group-append">
                         <button class="btn btn-outline-secondary" type="button">Cari</button>
                     </div>
-                    </div>
-                </div>
-                <div class="col-md-3 text-right">       
-                    <img src="images/user.png" alt="Google" style="width: 30px; margin-right: 8px;">
-        
-                    <select class="btn btn-outline-secondary">
-                        <option>ID</option>
-                        <option>EN</option>
-                    </select>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="container"><hr>
+    <div class="container">
+        <hr>
         <h1 class="page-title">Promo Makanan di <span style="color: var(--bima-green);">BiU Market</span></h1>
 
-        <div class="row">
-            <?php
-            include "koneksi.php";
-            $sql = "SELECT r.*, 
-                           GROUP_CONCAT(c.category_name) as categories,
-                           COUNT(p.id) as promo_count
-                    FROM restaurants r 
-                    LEFT JOIN restaurant_categories rc ON r.id = rc.restaurant_id
-                    LEFT JOIN categories c ON rc.category_id = c.id
-                    LEFT JOIN promotions p ON r.id = p.restaurant_id
-                    WHERE r.is_active = 1
-                    GROUP BY r.id
-                    ORDER BY r.featured DESC, r.rating DESC";
-            
-            $result = mysqli_query($koneksi, $sql);
-            
-            while ($row = mysqli_fetch_assoc($result)) {
-                ?>
-                <div class="col-md-3">
-                    <a href="#" class="restaurant-card">
-                        <?php if ($row['promo_count'] > 0) { ?>
-                            <div class="promo-badge">Promo</div>
-                        <?php } elseif ($row['featured']) { ?>
-                            <div class="featured-badge">Restoran Pilihan</div>
-                        <?php } ?>
-                        <img src="<?php echo htmlspecialchars($row['image_url']); ?>" 
-                             alt="<?php echo htmlspecialchars($row['name']); ?>"
-                             class="restaurant-image">
-                        <div class="restaurant-info">
-                            <h3 class="restaurant-name"><?php echo htmlspecialchars($row['name']); ?></h3>
-                            <div class="restaurant-tags"><?php echo htmlspecialchars($row['categories']); ?></div>
-                            <div class="restaurant-meta">
-                                <span class="rating">⭐ <?php echo number_format($row['rating'], 1); ?></span>                               
-                            </div>
-                        </div>
-                    </a>
-                </div>
+        <div class="restaurant-grid">
+            <div class="row">
                 <?php
-            }
-            ?>
+                include "koneksi.php";
+                $sql = "SELECT r.*, 
+                               GROUP_CONCAT(c.category_name) as categories,
+                               COUNT(p.id) as promo_count
+                        FROM restaurants r 
+                        LEFT JOIN restaurant_categories rc ON r.id = rc.restaurant_id
+                        LEFT JOIN categories c ON rc.category_id = c.id
+                        LEFT JOIN promotions p ON r.id = p.restaurant_id
+                        WHERE r.is_active = 1
+                        GROUP BY r.id
+                        ORDER BY r.featured DESC, r.rating DESC";
+                
+                $result = mysqli_query($koneksi, $sql);
+                
+                while ($row = mysqli_fetch_assoc($result)) {
+                    ?>
+                    <div class="col-md-3 col-6">
+                        <a href="#" class="restaurant-card">
+                            <?php if ($row['promo_count'] > 0) { ?>
+                                <div class="promo-badge">Promo</div>
+                            <?php } elseif ($row['featured']) { ?>
+                                <div class="featured-badge">Restoran Pilihan</div>
+                            <?php } ?>
+                            <img src="<?php echo htmlspecialchars($row['image_url']); ?>" 
+                                 alt="<?php echo htmlspecialchars($row['name']); ?>"
+                                 class="restaurant-image">
+                            <div class="restaurant-info">
+                                <h3 class="restaurant-name"><?php echo htmlspecialchars($row['name']); ?></h3>
+                                <div class="restaurant-tags"><?php echo htmlspecialchars($row['categories']); ?></div>
+                                <div class="restaurant-meta">
+                                    <span class="rating">⭐ <?php echo number_format($row['rating'], 1); ?></span>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <?php
+                }
+                ?>
+            </div>
         </div>
     </div>
 </body>
