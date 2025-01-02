@@ -223,7 +223,6 @@
     </header>
 
     <div class="container">
-        <hr>
         <h1 class="page-title">Promo Makanan di <span style="color: var(--bima-green);">BiU Market</span></h1>
 
         <div class="restaurant-grid">

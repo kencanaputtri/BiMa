@@ -24,6 +24,13 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
+        @media (max-width: 576px) {
+            .register-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+        
         .logo {
             text-align: center;
             margin-bottom: 30px;
@@ -48,6 +55,11 @@
             margin-bottom: 20px;
         }
         
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(3,172,14,0.25);
+        }
+        
         .btn-primary {
             background-color: var(--primary-color);
             border: none;
@@ -55,6 +67,7 @@
             font-weight: 500;
             width: 100%;
             margin-top: 10px;
+            border-radius: 8px;
         }
         
         .btn-primary:hover {
@@ -67,24 +80,22 @@
             position: relative;
         }
         
-        .divider::before {
+        .divider::before,
+        .divider::after {
             content: "";
             position: absolute;
-            left: 0;
             top: 50%;
             width: 45%;
             height: 1px;
             background: #ddd;
         }
         
+        .divider::before {
+            left: 0;
+        }
+        
         .divider::after {
-            content: "";
-            position: absolute;
             right: 0;
-            top: 50%;
-            width: 45%;
-            height: 1px;
-            background: #ddd;
         }
         
         .login-link {
@@ -103,6 +114,25 @@
             color: #666;
             text-align: center;
             margin-top: 20px;
+        }
+        
+        .terms a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+        
+        .btn-outline-secondary {
+            border-color: #ddd;
+            color: #666;
+            background-color: white;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #f8f9fa;
+            border-color: #ddd;
+            color: #666;
         }
     </style>
 </head>
@@ -125,6 +155,7 @@
                            pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" 
                            title="Minimal 8 karakter, harus mengandung huruf besar, huruf kecil dan angka">
                 </div>
+                
                 <a href="home.php" class="btn btn-primary btn-block" role="button">Masuk</a>
                 
                 <div class="divider">atau</div>
